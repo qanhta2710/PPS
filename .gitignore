@@ -1,0 +1,19 @@
+# Ignore all build directories
+build/
+**/build/
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+*.ninja*
+.ninja_deps
+.ninja_log
+
+# Executables
+*.exe
+*.out
+
+# Log files
+*.txt
+!README.txt
