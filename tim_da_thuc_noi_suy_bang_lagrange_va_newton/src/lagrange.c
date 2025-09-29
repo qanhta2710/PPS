@@ -45,31 +45,70 @@ void inDaThucLagrange(double *x, double *y, int n, int precision, double *coeffs
     for (int i = 0; i <= n; i++) {
         double *coeffsL_i = (double *)calloc(n + 1, sizeof(double));
         tinhHeSoL_ix(coeffsL_i, x, i, n);
-        tinhTungThanhPhanCuaPx(coeffsP, coeffsL_i, n, y[i]);
-        free(coeffsL_i);
-    }
-    printf("Cong thuc da thuc noi suy Lagrange:\n");
-    printLog("Cong thuc da thuc noi suy Lagrange:\n");
-    for (int i = 0; i <= n; i++) {
-        printf("L_%d(x) = %.*lf * ", i, precision, y[i]);
-        printLog("L_%d(x) = %.*lf * ", i, precision, y[i]);
-        for (int j = 0; j <= n; j++) {
-            if (j != i) {
-                printf("(x - %.*lf)", precision, x[j]);
-                printLog("(x - %.*lf)", precision, x[j]);
-            }
-        }
-        printf("/");
-        printLog("/");
-        for (int j = 0; j <= n; j++) {
-            if (j != i) {
-                printf("(%.*lf - %.*lf)", precision, x[i], precision, x[j]);
-                printLog("(%.*lf - %.*lf)", precision, x[i], precision, x[j]);
+                printf("L_%d(x) = ", i);
+        printLog("L_%d(x) = ", i);
+        int first_L = 1;
+        for (int j = n; j >= 0; j--) {
+            if (coeffsL_i[j] != 0) {
+                if (!first_L && coeffsL_i[j] > 0) {
+                    printf(" + ");
+                    printLog(" + ");
+                } else if (coeffsL_i[j] < 0) {
+                    printf(" - ");
+                    printLog(" - ");
+                } else if (!first_L) {
+                    printf(" + ");
+                    printLog(" + ");
+                }
+
+
+                printf("%.*lf", precision, fabs(coeffsL_i[j]));
+                printLog("%.*lf", precision, fabs(coeffsL_i[j]));
+
+                if (j > 0) {
+                    printf("x");
+                    printLog("x");
+                }
+                if (j > 1) {
+                    printf("^%d", j);
+                    printLog("^%d", j);
+                }
+                first_L = 0;
             }
         }
         printf("\n");
         printLog("\n");
+        printf("Thanh phan y_%d*L_%d(x) = ", i, i);
+        printLog("Thanh phan y_%d*L_%d(x) = ", i, i);
+        int first_yL = 1;
+        for (int j = n; j >= 0; j--) {
+            double current_coeff = y[i] * coeffsL_i[j];
+            if (current_coeff != 0) {
+                 if (!first_yL && current_coeff > 0) {
+                    printf(" + ");
+                    printLog(" + ");
+                } else if (current_coeff < 0) {
+                    printf(" - ");
+                    printLog(" - ");
+                }
+
+                printf("%.*lf", precision, fabs(current_coeff));
+                printLog("%.*lf", precision, fabs(current_coeff));
+
+                if (j > 0) printf("x");
+                if (j > 1) printf("^%d", j);
+                printLog(j > 0 ? "x" : "");
+                if (j > 1) printLog("^%d", j);
+
+                first_yL = 0;
+            }
+        }
+        printf("\n\n");
+        printLog("\n\n");
+        tinhTungThanhPhanCuaPx(coeffsP, coeffsL_i, n, y[i]);
+        free(coeffsL_i);
     }
+    
     printf("P(x) = ");
     printLog("P(x) = ");
     for (int i = 0; i <= n; i++) {
